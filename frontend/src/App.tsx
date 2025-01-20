@@ -1,28 +1,29 @@
-import {useState} from 'react';
-import logo from './assets/images/logo-universal.png';
-import './App.css';
-import {Greet} from "../wailsjs/go/main/App";
+import { HashRouter, Routes, Route, NavLink } from "react-router";
+import Home from "./Pages/Home";
+import Seriennummer from "./Pages/Seriennummer";
+import { ThemeProvider } from "./components/theme-provider";
+import NavBar from "./components/NavBar";
 
 function App() {
-    const [resultText, setResultText] = useState("Please enter your name below 👇");
-    const [name, setName] = useState('');
-    const updateName = (e: any) => setName(e.target.value);
-    const updateResultText = (result: string) => setResultText(result);
-
-    function greet() {
-        Greet(name).then(updateResultText);
-    }
-
-    return (
-        <div id="App">
-            <img src={logo} id="logo" alt="logo"/>
-            <div id="result" className="result">{resultText}</div>
-            <div id="input" className="input-box">
-                <input id="name" className="input" onChange={updateName} autoComplete="off" name="input" type="text"/>
-                <button className="btn" onClick={greet}>Greet</button>
-            </div>
+  // Router
+  return (
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <HashRouter basename={"/"}>
+        <NavBar />
+        <div className="mt-5 container text-center mx-auto">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/Seriennummer" element={<Seriennummer />} />
+            <Route path="/Info" element={<>Info</>} />
+            <Route path="/Aussteller" element={<>Aussteller</>} />
+            <Route path="/Label" element={<>Label</>} />
+            <Route path="/Warenlieferung" element={<>Warenlieferung</>} />
+            <Route path="/CMS" element={<>CMS</>} />
+          </Routes>
         </div>
-    )
+      </HashRouter>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;
