@@ -498,6 +498,7 @@ func (a *App) SendWarenlieferung() string {
 }
 
 func (a *App) SendInfo(Auftrag string, Mail string) string {
+	// TODO: Template mit in die Main, HTML Template Datei kann nicht gelesen werden, wenn im Prod!
 	env := config.GetEnv()
 	// Get Mail Settings
 	MAIL_FROM := env.MAIL_FROM
