@@ -5,15 +5,19 @@ go 1.21
 toolchain go1.23.3
 
 require (
-	github.com/caarlos0/env/v6 v6.10.1
 	github.com/denisenkom/go-mssqldb v0.12.3
-	github.com/joho/godotenv v1.5.1
 	github.com/wailsapp/wails/v2 v2.9.2
+)
+
+require (
+	filippo.io/edwards25519 v1.1.0 // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 )
 
 require (
 	github.com/bep/debounce v1.2.1 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
+	github.com/go-sql-driver/mysql v1.8.1
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang-sql/civil v0.0.0-20190719163853-cb61b32ac6fe // indirect
 	github.com/golang-sql/sqlexp v0.1.0 // indirect
@@ -25,6 +29,7 @@ require (
 	github.com/leaanthony/gosod v1.0.3 // indirect
 	github.com/leaanthony/slicer v1.6.0 // indirect
 	github.com/leaanthony/u v1.1.0 // indirect
+	github.com/mattn/go-adodb v0.0.1
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.19 // indirect
 	github.com/pkg/browser v0.0.0-20210911075715-681adbf594b8 // indirect
@@ -41,6 +46,7 @@ require (
 	golang.org/x/net v0.25.0 // indirect
 	golang.org/x/sys v0.20.0 // indirect
 	golang.org/x/text v0.15.0 // indirect
+	gopkg.in/mail.v2 v2.3.1
 )
 
 // replace github.com/wailsapp/wails/v2 v2.9.2 => C:\Users\johannes.kirchner\go\pkg\mod

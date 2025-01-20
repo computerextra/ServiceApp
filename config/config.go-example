@@ -1,0 +1,55 @@
+package config
+
+type Config struct {
+	DATABASE_URL     string
+	CMS_DATABASE_URL string
+	VITE_PORT        int
+	VITE_API         string
+	ARCHIVE_PATH     string
+	MAIL_FROM        string
+	MAIL_SERVER      string
+	MAIL_PORT        int
+	MAIL_USER        string
+	MAIL_PASSWORD    string
+	SAGE_SERVER      string
+	SAGE_PORT        int
+	SAGE_USER        string
+	SAGE_PASS        string
+	SAGE_DB          string
+	ACCESS_DB        string
+}
+
+func GetEnv() Config {
+	var (
+		DATABASE_URL     string = ""
+		CMS_DATABASE_URL string = ""
+		ARCHIVE_PATH     string = ""
+		MAIL_FROM        string = ""
+		MAIL_SERVER      string = ""
+		MAIL_PORT        int    = 587
+		MAIL_USER        string = ""
+		MAIL_PASSWORD    string = ""
+		SAGE_SERVER      string = ""
+		SAGE_PORT        int    = 1433
+		SAGE_USER        string = ""
+		SAGE_PASS        string = ""
+		SAGE_DB          string = ""
+		ACCESS_DB        string = ""
+	)
+	return Config{
+		DATABASE_URL:     DATABASE_URL,
+		CMS_DATABASE_URL: CMS_DATABASE_URL,
+		ARCHIVE_PATH:     ARCHIVE_PATH,
+		MAIL_FROM:        MAIL_FROM,
+		MAIL_SERVER:      MAIL_SERVER,
+		MAIL_PORT:        MAIL_PORT,
+		MAIL_USER:        MAIL_USER,
+		MAIL_PASSWORD:    MAIL_PASSWORD,
+		SAGE_SERVER:      SAGE_SERVER,
+		SAGE_PORT:        SAGE_PORT,
+		SAGE_USER:        SAGE_USER,
+		SAGE_PASS:        SAGE_PASS,
+		SAGE_DB:          SAGE_DB,
+		ACCESS_DB:        ACCESS_DB,
+	}
+}

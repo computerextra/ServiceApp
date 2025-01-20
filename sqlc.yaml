@@ -1,0 +1,25 @@
+version: "2"
+
+sql:
+- schema: "db/schema.sql"
+  queries: "db/query.sql"
+  engine: "mysql"
+  gen:
+    go: 
+      package: "db"
+      out: "db"
+  database:
+    managed: true
+  rules:
+    - sqlc/db-prepare
+- schema: "cms/schema.sql"
+  queries: "cms/query.sql"
+  engine: "mysql"
+  gen:
+    go:
+      package: "cms"
+      out: "cms"
+  database:
+    managed: true
+  rules:
+    - sqlc/db-prepare

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Terminal } from "lucide-react";
 import { GetSeriennummer } from "../../wailsjs/go/main/App";
+import BackButton from "@/components/BackButton";
 
 const formSchema = z.object({
   Artikelnummer: z.string(),
@@ -66,6 +67,7 @@ export default function Seriennummer() {
 
   return (
     <>
+      <BackButton href="/" />
       <h1 className="text-4xl">Seriennummer</h1>
       <h2>Eingabe von Artikelnummern</h2>
       <Form {...form}>
