@@ -38,7 +38,6 @@ export default function Info() {
   }, [message]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // BUG: App stürzt ab, wenn eine Mail gesendet wird!
     const res = await SendInfo(values.Auftrag, values.Mail);
     if (res != "OK") {
       setMessage(res);

@@ -279,3 +279,6 @@ SELECT Name, Artikelnummer FROM Warenlieferung WHERE DATE_FORMAT(angelegt, '%Y-%
 
 -- name: InsertAussteller :execresult
 INSERT INTO Aussteller (id, Artikelnummer, Artikelname, Specs, Preis) VALUES (?, ?, ?,?,?) ON DUPLICATE KEY UPDATE Artikelname = ?, Specs = ?, Preis = ?;
+
+-- name: GetAussteller :many
+SELECT * FROM Aussteller;

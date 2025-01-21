@@ -315,6 +315,40 @@ func (q *Queries) GetAnsprechpartnerFromLiegerant(ctx context.Context, lieferant
 	return items, nil
 }
 
+const getAussteller = `-- name: GetAussteller :many
+SELECT artikelnummer, artikelname, specs, preis, bild, id FROM Aussteller
+`
+
+func (q *Queries) GetAussteller(ctx context.Context) ([]Aussteller, error) {
+	rows, err := q.db.QueryContext(ctx, getAussteller)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []Aussteller
+	for rows.Next() {
+		var i Aussteller
+		if err := rows.Scan(
+			&i.Artikelnummer,
+			&i.Artikelname,
+			&i.Specs,
+			&i.Preis,
+			&i.Bild,
+			&i.ID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getDailyDelivered = `-- name: GetDailyDelivered :many
 SELECT Name, Artikelnummer FROM Warenlieferung WHERE DATE_FORMAT(geliefert, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') AND DATE_FORMAT(angelegt, '%Y-%m-%d') != DATE_FORMAT(NOW(), '%Y-%m-%d') ORDER BY Artikelnummer ASC
 `

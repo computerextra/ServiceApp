@@ -61,8 +61,6 @@ export default function Aussteller() {
 
   const sync = async () => {
     setLoading(true);
-    // TODO: HIer passt was nicht!
-    // BUG: Lädt sich zu tode!
     const res = await SyncAussteller();
     if (res != "OK") {
       setError(res);
