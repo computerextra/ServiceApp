@@ -1,6 +1,7 @@
 package main
 
 import (
+	"ServiceApp/cms"
 	"ServiceApp/config"
 	"ServiceApp/db"
 	"context"
@@ -16,6 +17,7 @@ import (
 
 	_ "github.com/denisenkom/go-mssqldb"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/google/uuid"
 	_ "github.com/mattn/go-adodb"
 	gomail "gopkg.in/mail.v2"
 )
@@ -107,6 +109,813 @@ func NewApp() *App {
 // so we can call the runtime methods
 func (a *App) startup(ctx context.Context) {
 	a.ctx = ctx
+}
+
+type Counts struct {
+	Abteilung   int64
+	Angebote    int64
+	Jobs        int64
+	Mitarbeiter int64
+	Partner     int64
+}
+
+// CMS
+
+// Abteilung
+func (a *App) GetAbteilungen() ([]cms.Abteilung, string) {
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetAbteilungen(ctx)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, ""
+	}
+}
+
+func (a *App) GetAbteilung(id string) (cms.Abteilung, string) {
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetAbteilung(ctx, id)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return cms.Abteilung{}, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) UpdateAbteilung(ID string, Name string) (sql.Result, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.UpdateAbteilung(ctx, cms.UpdateAbteilungParams{
+		Name: Name,
+		ID:   ID,
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return User, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) CreateAbteilung(Name string) (sql.Result, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.CreateAbteilung(ctx, cms.CreateAbteilungParams{
+		ID:   uuid.New().String(),
+		Name: Name,
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return User, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) DeleteAbteilung(ID string) string {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	err = queries.DeleteAbteilung(ctx, ID)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return fehler
+	} else {
+		return "OK"
+	}
+}
+
+// Angebote
+func (a *App) GetAngebote() ([]cms.Angebot, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetAngeboten(ctx)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) GetAngebot(id string) (cms.Angebot, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetAngebot(ctx, id)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return cms.Angebot{}, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) UpdateAngebot(ID string, Title string, Subtitle string, DateStart string, DateStop string, Link string, Image string, Anzeigen string) (sql.Result, string) {
+
+	var Start time.Time
+	var Stop time.Time
+
+	if len(DateStart) > 1 {
+		split := strings.Split(DateStart, ".")
+		year, err := strconv.Atoi(split[2])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+
+		month, err := strconv.Atoi(split[1])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+
+		day, err := strconv.Atoi(split[0])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+
+		Start = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	}
+	if len(DateStop) > 1 {
+		split := strings.Split(DateStop, ".")
+		year, err := strconv.Atoi(split[2])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+		month, err := strconv.Atoi(split[1])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+		day, err := strconv.Atoi(split[0])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+
+		Stop = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	}
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.UpdateAngebot(ctx, cms.UpdateAngebotParams{
+		Title:     Title,
+		Subtitle:  sql.NullString{String: Subtitle, Valid: If(len(Subtitle) > 1, true, false)},
+		DateStart: Start,
+		DateStop:  Stop,
+		Link:      Link,
+		Image:     Image,
+		Anzeigen:  sql.NullBool{Bool: If(Anzeigen == "true", true, false), Valid: If(len(Anzeigen) > 1, true, false)},
+		ID:        ID,
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) CreateAngebot(Title string, Subtitle string, DateStart string, DateStop string, Link string, Image string, Anzeigen string) (sql.Result, string) {
+
+	var Start time.Time
+	var Stop time.Time
+
+	if len(DateStart) > 1 {
+		split := strings.Split(DateStart, ".")
+
+		year, err := strconv.Atoi(split[2])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+
+		month, err := strconv.Atoi(split[1])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+
+		day, err := strconv.Atoi(split[0])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+
+		Start = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	}
+	if len(DateStop) > 1 {
+		split := strings.Split(DateStop, ".")
+		year, err := strconv.Atoi(split[2])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+		month, err := strconv.Atoi(split[1])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+		day, err := strconv.Atoi(split[0])
+		if err != nil {
+			fehler := err.Error()
+			return nil, fehler
+		}
+
+		Stop = time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	}
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.CreateAngebot(ctx, cms.CreateAngebotParams{
+		Title:     Title,
+		Subtitle:  sql.NullString{String: Subtitle, Valid: If(len(Subtitle) > 1, true, false)},
+		DateStart: Start,
+		DateStop:  Stop,
+		Link:      Link,
+		Image:     Image,
+		Anzeigen:  sql.NullBool{Bool: If(Anzeigen == "true", true, false), Valid: If(len(Anzeigen) > 1, true, false)},
+		ID:        uuid.New().String(),
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) DeleteAngebot(ID string) string {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	err = queries.DeleteAngebot(ctx, ID)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return fehler
+	} else {
+		return "OK"
+	}
+}
+
+// Jobs
+func (a *App) GetJobs() ([]cms.Job, string) {
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetJos(ctx)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) GetJob(id string) (cms.Job, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetJob(ctx, id)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return cms.Job{}, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) UpdateJob(ID string, Name string, Online string) (sql.Result, string) {
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.UpdateJob(ctx, cms.UpdateJobParams{
+		Name:   Name,
+		ID:     ID,
+		Online: If(Online == "true", true, false),
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) CreateJob(Name string, Online string) (sql.Result, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.CreateJob(ctx, cms.CreateJobParams{
+		ID:     uuid.New().String(),
+		Name:   Name,
+		Online: If(Online == "true", true, false),
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) DeleteJob(ID string) string {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	err = queries.DeleteJob(ctx, ID)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return fehler
+	} else {
+		return "OK"
+	}
+}
+
+// Mitarbeiter
+func (a *App) GetAllMitarbeiter() ([]cms.Mitarbeiter, string) {
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetAllMitarbeiter(ctx)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) GetMitarbeiter(id string) (cms.Mitarbeiter, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetMitarbeiter(ctx, id)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return cms.Mitarbeiter{}, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) UpdateMitarbeiter(ID string, Name string, Short string, Image string, Sex string, Tags string, Focus string, Abteilungid string) (sql.Result, string) {
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.UpdateMitarbeiter(ctx, cms.UpdateMitarbeiterParams{
+		Name:        Name,
+		ID:          ID,
+		Short:       Short,
+		Image:       If(Image == "true", true, false),
+		Sex:         Sex,
+		Tags:        Tags,
+		Focus:       Focus,
+		Abteilungid: Abteilungid,
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) CreateMitarbeiter(Name string, Short string, Image string, Sex string, Tags string, Focus string, Abteilungid string) (sql.Result, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.CreateMitarbeiter(ctx, cms.CreateMitarbeiterParams{
+		ID:          uuid.New().String(),
+		Name:        Name,
+		Short:       Short,
+		Image:       If(Image == "true", true, false),
+		Sex:         Sex,
+		Tags:        Tags,
+		Focus:       Focus,
+		Abteilungid: Abteilungid,
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) DeleteMitarbeiter(ID string) string {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	err = queries.DeleteMitarbeiter(ctx, ID)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return fehler
+	} else {
+		return "OK"
+	}
+}
+
+// Partner
+func (a *App) GetAllPartner() ([]cms.Partner, string) {
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetAllPartner(ctx)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) GetPartner(id string) (cms.Partner, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.GetPartner(ctx, id)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return cms.Partner{}, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) UpdatePartner(ID string, Name string, Link string, Image string) (sql.Result, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.UpdatePartner(ctx, cms.UpdatePartnerParams{
+		Name:  Name,
+		ID:    ID,
+		Link:  Link,
+		Image: Image,
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) CreatePartner(Name string, Link string, Image string) (sql.Result, string) {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	User, err := queries.CreatePartner(ctx, cms.CreatePartnerParams{
+		ID:    uuid.New().String(),
+		Name:  Name,
+		Link:  Link,
+		Image: Image,
+	})
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return nil, fehler
+	} else {
+		return User, "OK"
+	}
+}
+
+func (a *App) DeletePartner(ID string) string {
+
+	ctx := a.ctx
+	env := config.GetEnv()
+	// Get Database
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+	err = queries.DeletePartner(ctx, ID)
+	datebase.Close()
+
+	if err != nil {
+		fehler := err.Error()
+		return fehler
+	} else {
+		return "OK"
+	}
+}
+
+func (a *App) GetCmsCounts() (Counts, string) {
+	env := config.GetEnv()
+	datebase, err := sql.Open("mysql", env.CMS_DATABASE_URL)
+	if err != nil {
+		panic(err)
+	}
+	datebase.SetConnMaxIdleTime(time.Minute * 3)
+	datebase.SetMaxOpenConns(10)
+	datebase.SetMaxIdleConns(10)
+	queries := cms.New(datebase)
+
+	var counts Counts
+
+	Abteilung, err := queries.AbteilungCount(a.ctx)
+	if err != nil {
+		fehler := err.Error()
+		return counts, fehler
+	}
+	counts.Abteilung = Abteilung
+	Angebote, err := queries.AngebotCount(a.ctx)
+	if err != nil {
+		fehler := err.Error()
+		return counts, fehler
+	}
+	counts.Angebote = Angebote
+	Jobs, err := queries.JobCount(a.ctx)
+	if err != nil {
+		fehler := err.Error()
+		return counts, fehler
+	}
+	counts.Jobs = Jobs
+	Mitarbeiter, err := queries.MitarbeiterCount(a.ctx)
+	if err != nil {
+		fehler := err.Error()
+		return counts, fehler
+	}
+	counts.Mitarbeiter = Mitarbeiter
+	Partner, err := queries.PartnerCount(a.ctx)
+	if err != nil {
+		fehler := err.Error()
+		return counts, fehler
+	}
+	counts.Partner = Partner
+	return counts, "OK"
 }
 
 func (a *App) GetSeriennummer(Artikelnummer string) string {
@@ -1248,4 +2057,11 @@ func getAlteSeriennummern() ([]AlteSeriennummer, error) {
 	}
 
 	return artikel, nil
+}
+
+func If[T any](cond bool, vtrue, vfalse T) T {
+	if cond {
+		return vtrue
+	}
+	return vfalse
 }

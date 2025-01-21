@@ -11,6 +11,28 @@ import (
 	"time"
 )
 
+const abteilungCount = `-- name: AbteilungCount :one
+SELECT COUNT(*) FROM Abteilung
+`
+
+func (q *Queries) AbteilungCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, abteilungCount)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const angebotCount = `-- name: AngebotCount :one
+SELECT COUNT(*) FROM Angebot
+`
+
+func (q *Queries) AngebotCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, angebotCount)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
 const createAbteilung = `-- name: CreateAbteilung :execresult
 INSERT INTO Abteilung (id, name) VALUES (?, ?)
 `
@@ -396,6 +418,39 @@ func (q *Queries) GetPartner(ctx context.Context, id string) (Partner, error) {
 		&i.Image,
 	)
 	return i, err
+}
+
+const jobCount = `-- name: JobCount :one
+SELECT COUNT(*) FROM Jobs
+`
+
+func (q *Queries) JobCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, jobCount)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const mitarbeiterCount = `-- name: MitarbeiterCount :one
+SELECT COUNT(*) FROM Mitarbeiter
+`
+
+func (q *Queries) MitarbeiterCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, mitarbeiterCount)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
+}
+
+const partnerCount = `-- name: PartnerCount :one
+SELECT COUNT(*) FROM Partner
+`
+
+func (q *Queries) PartnerCount(ctx context.Context) (int64, error) {
+	row := q.db.QueryRowContext(ctx, partnerCount)
+	var count int64
+	err := row.Scan(&count)
+	return count, err
 }
 
 const updateAbteilung = `-- name: UpdateAbteilung :execresult

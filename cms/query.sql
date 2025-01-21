@@ -79,3 +79,17 @@ VALUES (?, ?, ?, ?);
 -- name: DeletePartner :exec
 DELETE FROM Partner WHERE id = ?;
 
+-- name: MitarbeiterCount :one
+SELECT COUNT(*) FROM Mitarbeiter;
+
+-- name: AbteilungCount :one
+SELECT COUNT(*) FROM Abteilung;
+
+-- name: AngebotCount :one
+SELECT COUNT(*) FROM Angebot;
+
+-- name: JobCount :one
+SELECT COUNT(*) FROM Jobs;
+
+-- name: PartnerCount :one
+SELECT COUNT(*) FROM Partner;
