@@ -46,7 +46,7 @@ export default function Info() {
     }
 
     form.reset(
-      { Auftrag: undefined, Mail: undefined },
+      { Auftrag: "", Mail: "" },
       {
         keepDefaultValues: false,
         keepDirty: false,
