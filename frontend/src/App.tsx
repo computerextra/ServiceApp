@@ -1,28 +1,29 @@
-import { HashRouter, Routes, Route, NavLink } from "react-router";
-import Home from "./Pages/Home";
-import Seriennummer from "./Pages/Seriennummer";
-import { ThemeProvider } from "./components/theme-provider";
+import { HashRouter, NavLink, Route, Routes } from "react-router";
 import NavBar from "./components/NavBar";
-import Info from "./Pages/Info";
+import { ThemeProvider } from "./components/theme-provider";
 import Aussteller from "./Pages/Aussteller";
-import Label from "./Pages/Label";
-import Warenlieferung from "./Pages/Warenlieferung";
-import Cms from "./Pages/CMS/Cms";
-import AbteilungOverview from "./Pages/CMS/Abteilungen/Overview";
-import AbteilungNew from "./Pages/CMS/Abteilungen/New";
 import AbteilungEdit from "./Pages/CMS/Abteilungen/Edit";
-import MitarbeiterNew from "./Pages/CMS/Mitarbeiter/New";
-import MitarbeiterEdit from "./Pages/CMS/Mitarbeiter/Edit";
-import PartnerNew from "./Pages/CMS/Partner/New";
-import PartnerEdit from "./Pages/CMS/Partner/Edit";
-import AngebotNew from "./Pages/CMS/Angebote/New";
-import JobsNew from "./Pages/CMS/Jobs/New";
-import JobsEdit from "./Pages/CMS/Jobs/Edit";
-import MitarbeiterOverview from "./Pages/CMS/Mitarbeiter/Overview";
-import PartnerOverview from "./Pages/CMS/Partner/Overview";
-import AngebotOverview from "./Pages/CMS/Angebote/Overview";
+import AbteilungNew from "./Pages/CMS/Abteilungen/New";
+import AbteilungOverview from "./Pages/CMS/Abteilungen/Overview";
 import AngebotEdit from "./Pages/CMS/Angebote/Edit";
+import AngebotNew from "./Pages/CMS/Angebote/New";
+import AngebotOverview from "./Pages/CMS/Angebote/Overview";
+import Cms from "./Pages/CMS/Cms";
+import JobsEdit from "./Pages/CMS/Jobs/Edit";
+import JobsNew from "./Pages/CMS/Jobs/New";
 import JobsOverview from "./Pages/CMS/Jobs/Overview";
+import MitarbeiterEdit from "./Pages/CMS/Mitarbeiter/Edit";
+import MitarbeiterNew from "./Pages/CMS/Mitarbeiter/New";
+import MitarbeiterOverview from "./Pages/CMS/Mitarbeiter/Overview";
+import PartnerEdit from "./Pages/CMS/Partner/Edit";
+import PartnerNew from "./Pages/CMS/Partner/New";
+import PartnerOverview from "./Pages/CMS/Partner/Overview";
+import Home from "./Pages/Home";
+import Info from "./Pages/Info";
+import Label from "./Pages/Label";
+import Sage from "./Pages/Sage";
+import Seriennummer from "./Pages/Seriennummer";
+import Warenlieferung from "./Pages/Warenlieferung";
 
 function App() {
   // Router
@@ -38,6 +39,7 @@ function App() {
             <Route path="/Aussteller" element={<Aussteller />} />
             <Route path="/Label" element={<Label />} />
             <Route path="/Warenlieferung" element={<Warenlieferung />} />
+            <Route path="/Sage" element={<Sage />} />
             <Route path="CMS">
               <Route index element={<Cms />} />
 

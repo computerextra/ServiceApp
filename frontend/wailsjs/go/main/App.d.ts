@@ -50,6 +50,8 @@ export function GetPartner(arg1:string):Promise<cms.Partner|string>;
 
 export function GetSeriennummer(arg1:string):Promise<string>;
 
+export function SearchKunde(arg1:string):Promise<Array<main.Sg_Adressen>>;
+
 export function SendInfo(arg1:string,arg2:string):Promise<string>;
 
 export function SendWarenlieferung():Promise<string>;

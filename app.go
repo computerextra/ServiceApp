@@ -10,6 +10,7 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"regexp"
 	"slices"
 	"strconv"
 	"strings"
@@ -143,6 +144,138 @@ func (a *App) GetAbteilungen() ([]cms.Abteilung, string) {
 	} else {
 		return User, ""
 	}
+}
+
+type Sg_Adressen struct {
+	SG_Adressen_PK int
+	Suchbegriff    sql.NullString
+	KundNr         sql.NullString
+	LiefNr         sql.NullString
+	Homepage       sql.NullString
+	Telefon1       sql.NullString
+	Telefon2       sql.NullString
+	Mobiltelefon1  sql.NullString
+	Mobiltelefon2  sql.NullString
+	EMail1         sql.NullString
+	EMail2         sql.NullString
+	KundUmsatz     sql.NullFloat64
+	LiefUmsatz     sql.NullFloat64
+}
+
+func (a *App) SearchKunde(search string) []Sg_Adressen {
+	var SearchResults []Sg_Adressen
+	reverse, err := regexp.MatchString("^(\\d|[+]49)", search)
+	if err != nil {
+		panic(err)
+	}
+
+	database, err := sql.Open("sqlserver", getSageConnectionString())
+	if err != nil {
+		panic(err)
+	}
+	defer database.Close()
+
+	if reverse {
+		SearchParam := strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(strings.ReplaceAll(search, "+49", "0"), " ", ""), "(", ""), ")", ""), "/", ""), "-", ""), ",", "")
+		query := fmt.Sprintf(`
+			SELECT SG_Adressen_PK, Suchbegriff,  KundNr, LiefNr, Homepage, Telefon1, Telefon2, Mobiltelefon1, Mobiltelefon2, EMail1, EMail2, KundUmsatz, LiefUmsatz 
+			FROM sg_adressen WHERE 
+			REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Telefon1, ' ',''),'/',''),'-',''),'+49','0'),'(',''),')',''),',','')
+			LIKE '%%%s%%' 
+			OR 
+			REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Telefon2, ' ',''),'/',''),'-',''),'+49','0'),'(',''),')',''),',','')
+			LIKE '%%%s%%' 
+			OR 
+			REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Mobiltelefon1, ' ',''),'/',''),'-',''),'+49','0'),'(',''),')',''),',','')
+			LIKE '%%%s%%' 
+			OR 
+			REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Mobiltelefon2, ' ',''),'/',''),'-',''),'+49','0'),'(',''),')',''),',','')
+			LIKE '%%%s%%'`, SearchParam, SearchParam, SearchParam, SearchParam,
+		)
+
+		rows, err := database.Query(query)
+		if err != nil {
+			panic(err)
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var x Sg_Adressen
+
+			if err := rows.Scan(&x.SG_Adressen_PK,
+				&x.Suchbegriff,
+				&x.KundNr,
+				&x.LiefNr,
+				&x.Homepage,
+				&x.Telefon1,
+				&x.Telefon2,
+				&x.Mobiltelefon1,
+				&x.Mobiltelefon2,
+				&x.EMail1,
+				&x.EMail2,
+				&x.KundUmsatz,
+				&x.LiefUmsatz); err != nil {
+				panic(err)
+			}
+			SearchResults = append(SearchResults, x)
+		}
+		if err := rows.Err(); err != nil {
+			panic(err)
+		}
+	} else {
+		rows, err := database.Query(fmt.Sprintf(`
+		DECLARE @SearchWord NVARCHAR(30) 
+		SET @SearchWord = N'%%%s%%' 
+		SELECT 
+		SG_Adressen_PK, 
+		Suchbegriff,  
+		KundNr, 
+		LiefNr, 
+		Homepage, 
+		Telefon1, 
+		Telefon2, 
+		Mobiltelefon1, 
+		Mobiltelefon2, 
+		EMail1, 
+		EMail2, 
+		KundUmsatz, 
+		LiefUmsatz 
+		FROM sg_adressen 
+		WHERE Suchbegriff LIKE @SearchWord 
+		OR KundNr LIKE @SearchWord 
+		OR LiefNr LIKE @SearchWord;`, search))
+
+		if err != nil {
+			panic(err)
+		}
+		defer rows.Close()
+
+		for rows.Next() {
+			var x Sg_Adressen
+			if err := rows.Scan(
+				&x.SG_Adressen_PK,
+				&x.Suchbegriff,
+				&x.KundNr,
+				&x.LiefNr,
+				&x.Homepage,
+				&x.Telefon1,
+				&x.Telefon2,
+				&x.Mobiltelefon1,
+				&x.Mobiltelefon2,
+				&x.EMail1,
+				&x.EMail2,
+				&x.KundUmsatz,
+				&x.LiefUmsatz); err != nil {
+				panic(err)
+			}
+			SearchResults = append(SearchResults, x)
+		}
+		if err := rows.Err(); err != nil {
+			panic(err)
+		}
+	}
+
+	return SearchResults
 }
 
 func (a *App) GetAbteilung(id string) (cms.Abteilung, string) {

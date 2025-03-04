@@ -61,6 +61,13 @@ export default function NavBar() {
               </NavigationMenuLink>
             </NavLink>
           </NavigationMenuItem>
+          <NavigationMenuItem>
+            <NavLink to="/Sage" legacyBehavior passHref>
+              <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                Sage
+              </NavigationMenuLink>
+            </NavLink>
+          </NavigationMenuItem>
         </NavigationMenuList>
       </NavigationMenu>
     </div>

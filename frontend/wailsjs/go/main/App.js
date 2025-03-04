@@ -94,6 +94,10 @@ export function GetSeriennummer(arg1) {
   return window['go']['main']['App']['GetSeriennummer'](arg1);
 }
 
+export function SearchKunde(arg1) {
+  return window['go']['main']['App']['SearchKunde'](arg1);
+}
+
 export function SendInfo(arg1, arg2) {
   return window['go']['main']['App']['SendInfo'](arg1, arg2);
 }
