@@ -180,7 +180,7 @@ export default function Sage() {
         </div>
       </form>
       <Separator />
-      {results && results.length > 1 && (
+      {results && results.length > 0 && (
         <div className="mt-5">
           <DataTable columns={columns} data={results} placeholder="PLATZ DA" />
         </div>
