@@ -1,4 +1,4 @@
-import { HashRouter, NavLink, Route, Routes } from "react-router";
+import { HashRouter, Route, Routes } from "react-router";
 import NavBar from "./components/NavBar";
 import { ThemeProvider } from "./components/theme-provider";
 import Aussteller from "./Pages/Aussteller";

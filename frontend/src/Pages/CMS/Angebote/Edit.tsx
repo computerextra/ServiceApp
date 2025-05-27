@@ -22,14 +22,14 @@ import { de } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { z } from "zod";
-import "react-day-picker/dist/style.css";
 import {
-  UpdateAngebot,
   DeleteAngebot,
   GetAngebot,
+  UpdateAngebot,
 } from "../../../../wailsjs/go/main/App";
 
 const Angebot = z.object({

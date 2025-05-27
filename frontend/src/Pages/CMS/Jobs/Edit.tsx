@@ -14,8 +14,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
-import { DeleteJob, GetJob, UpdateJob } from "../../../../wailsjs/go/main/App";
 import { z } from "zod";
+import { DeleteJob, GetJob, UpdateJob } from "../../../../wailsjs/go/main/App";
 
 const Job = z.object({
   ID: z.string(),

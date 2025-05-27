@@ -1,3 +1,4 @@
+import BackButton from "@/components/BackButton";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,7 +15,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { SendInfo } from "../../wailsjs/go/main/App";
-import BackButton from "@/components/BackButton";
 
 const formSchema = z.object({
   Auftrag: z.string(),

@@ -1,5 +1,4 @@
 import BackButton from "@/components/BackButton";
-import LoadingSpinner from "@/components/LoadingSpinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -23,13 +22,13 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { z } from "zod";
-import { Abteilung } from "../Abteilungen/Edit";
 import {
   DeleteMitarbeiter,
   GetAbteilungen,
   GetMitarbeiter,
   UpdateMitarbeiter,
 } from "../../../../wailsjs/go/main/App";
+import { Abteilung } from "../Abteilungen/Edit";
 
 const Mitarbeiter = z.object({
   ID: z.string(),

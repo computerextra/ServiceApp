@@ -13,56 +13,56 @@ export default function NavBar() {
       <NavigationMenu className="mx-auto">
         <NavigationMenuList>
           <NavigationMenuItem>
-            <NavLink to="/" legacyBehavior passHref>
+            <NavLink to="/">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Home
               </NavigationMenuLink>
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavLink to="/Seriennummer" legacyBehavior passHref>
+            <NavLink to="/Seriennummer">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Seriennummer
               </NavigationMenuLink>
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavLink to="/Info" legacyBehavior passHref>
+            <NavLink to="/Info">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Info
               </NavigationMenuLink>
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavLink to="/Aussteller" legacyBehavior passHref>
+            <NavLink to="/Aussteller">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Aussteller
               </NavigationMenuLink>
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavLink to="/Label" legacyBehavior passHref>
+            <NavLink to="/Label">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Label
               </NavigationMenuLink>
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavLink to="/Warenlieferung" legacyBehavior passHref>
+            <NavLink to="/Warenlieferung">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Warenlieferung
               </NavigationMenuLink>
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavLink to="/CMS" legacyBehavior passHref>
+            <NavLink to="/CMS">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 CMS
               </NavigationMenuLink>
             </NavLink>
           </NavigationMenuItem>
           <NavigationMenuItem>
-            <NavLink to="/Sage" legacyBehavior passHref>
+            <NavLink to="/Sage">
               <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                 Sage
               </NavigationMenuLink>

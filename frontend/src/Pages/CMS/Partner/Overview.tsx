@@ -1,4 +1,5 @@
 import BackButton from "@/components/BackButton";
+import { DataTable } from "@/components/DataTable";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -9,11 +10,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
-import { Link } from "react-router";
-import { Partner } from "./Edit";
-import { DataTable } from "@/components/DataTable";
 import { useEffect, useState } from "react";
+import { Link } from "react-router";
 import { GetAllPartner } from "../../../../wailsjs/go/main/App";
+import { Partner } from "./Edit";
 
 const columns: ColumnDef<Partner>[] = [
   {

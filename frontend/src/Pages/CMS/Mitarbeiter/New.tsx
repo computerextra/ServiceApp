@@ -21,11 +21,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
+import { z } from "zod";
 import {
   CreateMitarbeiter,
   GetAbteilungen,
 } from "../../../../wailsjs/go/main/App";
-import { z } from "zod";
 import { Abteilung } from "../Abteilungen/Edit";
 
 const CreateMitarbeiterProps = z.object({

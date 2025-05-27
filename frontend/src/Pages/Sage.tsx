@@ -6,7 +6,6 @@ import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { ColumnDef } from "@tanstack/react-table";
 import { useState } from "react";
-import { p } from "react-router/dist/development/fog-of-war-Ckdfl79L";
 import { SearchKunde } from "../../wailsjs/go/main/App";
 import type { main } from "../../wailsjs/go/models";
 

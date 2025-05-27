@@ -11,11 +11,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { SyncAussteller } from "../../wailsjs/go/main/App";
-import axios, { AxiosRequestConfig, RawAxiosRequestHeaders } from "axios";
 
 const createAusstellerImageProps = z.object({
   Artikelnummer: z.string(),

@@ -13,12 +13,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
+import { z } from "zod";
 import {
   DeletePartner,
   GetPartner,
   UpdatePartner,
 } from "../../../../wailsjs/go/main/App";
-import { z } from "zod";
 
 const Partner = z.object({
   ID: z.string(),

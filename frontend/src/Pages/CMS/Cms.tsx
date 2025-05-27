@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/button";
 
+import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { Link } from "react-router";
 import { GetCmsCounts } from "../../../wailsjs/go/main/App";
-import { Badge } from "@/components/ui/badge";
 
 type Counts = {
   Abteilung: number;

@@ -15,17 +15,17 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
-import { CreateAngebot } from "../../../../wailsjs/go/main/App";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
 import { de } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
-import "react-day-picker/dist/style.css";
+import { CreateAngebot } from "../../../../wailsjs/go/main/App";
 
 const CreateAngebotProps = z.object({
   Title: z.string(),

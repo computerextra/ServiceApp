@@ -13,8 +13,8 @@ import { Switch } from "@/components/ui/switch";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { CreateJob } from "../../../../wailsjs/go/main/App";
 import { z } from "zod";
+import { CreateJob } from "../../../../wailsjs/go/main/App";
 
 const CreateJobProps = z.object({
   Name: z.string(),

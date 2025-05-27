@@ -9,12 +9,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { CreateAbteilung } from "../../../../wailsjs/go/main/App";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
+import { CreateAbteilung } from "../../../../wailsjs/go/main/App";
 
 const CreateAbteilungProps = z.object({ Name: z.string() });
 type CreateAbteilungProps = z.infer<typeof CreateAbteilungProps>;

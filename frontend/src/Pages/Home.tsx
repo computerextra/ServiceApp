@@ -5,8 +5,8 @@ export default function Home() {
   return (
     <>
       <h1 className="text-4xl">ServiceApp</h1>
-      <h2 className="text-2xl mt-2">Schnellwahl</h2>
-      <div className="grid gap-8 grid-cols-2 mt-4">
+      <h2 className="mt-2 text-2xl">Schnellwahl</h2>
+      <div className="grid grid-cols-2 gap-8 mt-4">
         <Button asChild>
           <NavLink to="/Seriennummer">Seriennummer</NavLink>
         </Button>

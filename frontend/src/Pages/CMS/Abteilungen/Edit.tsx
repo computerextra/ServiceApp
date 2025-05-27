@@ -15,9 +15,9 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import { z } from "zod";
 import {
+  DeleteAbteilung,
   GetAbteilung,
   UpdateAbteilung,
-  DeleteAbteilung,
 } from "../../../../wailsjs/go/main/App";
 
 const UpdateAbteilungProps = z.object({

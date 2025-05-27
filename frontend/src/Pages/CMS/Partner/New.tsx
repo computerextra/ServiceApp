@@ -12,8 +12,8 @@ import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
-import { CreatePartner } from "../../../../wailsjs/go/main/App";
 import { z } from "zod";
+import { CreatePartner } from "../../../../wailsjs/go/main/App";
 
 const CreatePartnerProps = z.object({
   Name: z.string(),

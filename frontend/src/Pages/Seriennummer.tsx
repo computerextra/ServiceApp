@@ -1,7 +1,6 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
+import BackButton from "@/components/BackButton";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,11 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Terminal } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { GetSeriennummer } from "../../wailsjs/go/main/App";
-import BackButton from "@/components/BackButton";
 
 const formSchema = z.object({
   Artikelnummer: z.string(),
