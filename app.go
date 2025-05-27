@@ -1249,6 +1249,93 @@ func (a *App) SendWarenlieferung() string {
 		return fehler
 	}
 
+	// Wildes Zeug:
+	type sg_auf_fschrift struct {
+		ERFART    sql.NullString
+		USERNAME  sql.NullString
+		DATUM     sql.NullTime
+		AUFNR     sql.NullString
+		ALTAUFNR  sql.NullString
+		ENDPRB    sql.NullFloat64
+		VERTRETER sql.NullString
+		NAME      sql.NullString
+	}
+
+	type Response struct {
+		Auftrag    string
+		Wert       float64
+		Verbrecher string
+		Datum      time.Time
+		Kunde      string
+	}
+	var verbrecher []Response
+	var gesamtWert float64 = 0
+
+	conn, err := sql.Open("sqlserver", getSageConnectionString())
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close()
+	rows, err := conn.Query("SELECT ERFART, USERNAME, DATUM, AUFNR, ALTAUFNR, ENDPRB, VERTRETER, NAME FROM sg_auf_fschrift WHERE FORTGEFUEHRT != 1 AND (ERFART like '02AU' OR ERFART like '03LI');")
+	if err != nil {
+		panic(err)
+	}
+	defer rows.Close()
+	var res []sg_auf_fschrift
+	for rows.Next() {
+		var x sg_auf_fschrift
+		if err := rows.Scan(&x.ERFART, &x.USERNAME, &x.DATUM, &x.AUFNR, &x.ALTAUFNR, &x.ENDPRB, &x.VERTRETER, &x.NAME); err != nil {
+			panic(err)
+		}
+		res = append(res, x)
+	}
+
+	for _, x := range res {
+		if x.AUFNR.Valid {
+			query := fmt.Sprintf("SELECT ERFART FROM sg_auf_fschrift WHERE ALTAUFNR LIKE '%s';", x.AUFNR.String)
+			row, err := conn.Query(query)
+			if err != nil {
+				panic(err)
+			}
+			defer row.Close()
+			if row.Next() {
+				var y sql.NullString
+				if err := row.Scan(&y); err != nil {
+					panic(err)
+				}
+				if y.Valid {
+					if y.String != "04RE" {
+						if x.ENDPRB.Valid {
+							verbrecher = append(verbrecher, Response{
+								Auftrag:    x.AUFNR.String,
+								Wert:       x.ENDPRB.Float64,
+								Verbrecher: x.VERTRETER.String,
+								Datum:      x.DATUM.Time,
+								Kunde:      x.NAME.String,
+							})
+							gesamtWert += x.ENDPRB.Float64
+						}
+					}
+
+				}
+			} else {
+				if x.ENDPRB.Valid {
+					verbrecher = append(verbrecher, Response{
+						Auftrag:    x.AUFNR.String,
+						Wert:       x.ENDPRB.Float64,
+						Verbrecher: x.VERTRETER.String,
+						Datum:      x.DATUM.Time,
+						Kunde:      x.NAME.String,
+					})
+					gesamtWert += x.ENDPRB.Float64
+				}
+			}
+
+		}
+	}
+
+	// Mail Versand
+
 	MAIL_FROM := env.MAIL_FROM
 	MAIL_SERVER := env.MAIL_SERVER
 	MAIL_PORT := env.MAIL_PORT
@@ -1312,6 +1399,7 @@ func (a *App) SendWarenlieferung() string {
 
 	body = fmt.Sprintf("%s<h2>Aktuelle Lagerwerte</h2><p><b>Lagerwert Verfügbare Artikel:</b> %.2f €</p><p><b>Lagerwert alle lagernde Artikel:</b> %.2f €</p>", body, wertVerfügbar, wertBestand)
 	body = fmt.Sprintf("%s<p>Wert in aktuellen Aufträgen: %.2f €", body, wertBestand-wertVerfügbar)
+	body = fmt.Sprintf("%s<p>Werte in offenen Aufträgen laut Sage: %.2f €", body, gesamtWert)
 
 	if len(SN) > 0 {
 		body = fmt.Sprintf("%s<h2>Artikel mit alten Seriennummern</h2><p>Nachfolgende Artikel sollten mit erhöhter Prioriät verkauf werden, da die Seriennummern bereits sehr alt sind. Gegebenenfalls sind die Artikel bereits außerhalb der Herstellergarantie!</p>", body)
@@ -1397,6 +1485,22 @@ func (a *App) SendWarenlieferung() string {
 			artNr := leichen[i].Artikelnummer
 			name := leichen[i].Artikelname
 			body = fmt.Sprintf("%s<tr><td>%s</td><td>%s</td><td>%d</td><td>%d</td><td>%s</td><td>%.2f€</td></tr>", body, artNr, name, bestand, verf, LetzterUmsatz, summe)
+		}
+		body = fmt.Sprintf("%s</tbody></table>", body)
+	}
+
+	if len(verbrecher) > 0 {
+		body = fmt.Sprintf("%s<h2>Aktuell offene Aufträge</h2><table><thead><tr><th>Auftrag</th><th>Summe Brutto</th><th>Vertreter</th><th>Kundenname</th><th>Datum</th></tr></thead><tbody>", body)
+
+		for _, i := range verbrecher {
+			body = fmt.Sprintf("%s<tr>", body)
+			body = fmt.Sprintf("%s<td>%s</td>", body, i.Auftrag)
+			body = fmt.Sprintf("%s<td>%.2f €</td>", body, i.Wert)
+			body = fmt.Sprintf("%s<td>%s</td>", body, i.Verbrecher)
+			body = fmt.Sprintf("%s<td>%s</td>", body, i.Kunde)
+			body = fmt.Sprintf("%s<td>%s</td>", body, i.Datum.Format(time.DateOnly))
+			body = fmt.Sprintf("%s</tr>", body)
+
 		}
 		body = fmt.Sprintf("%s</tbody></table>", body)
 	}
