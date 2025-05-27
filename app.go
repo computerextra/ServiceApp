@@ -12,6 +12,7 @@ import (
 	"log"
 	"regexp"
 	"slices"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -1316,7 +1317,6 @@ func (a *App) SendWarenlieferung() string {
 							gesamtWert += x.ENDPRB.Float64
 						}
 					}
-
 				}
 			} else {
 				if x.ENDPRB.Valid {
@@ -1330,9 +1330,13 @@ func (a *App) SendWarenlieferung() string {
 					gesamtWert += x.ENDPRB.Float64
 				}
 			}
-
 		}
 	}
+
+	// Verbrecher sortieren nach Datum
+	sort.Slice(verbrecher, func(i, j int) bool {
+		return verbrecher[i].Datum.Before(verbrecher[j].Datum)
+	})
 
 	// Mail Versand
 
@@ -1399,7 +1403,7 @@ func (a *App) SendWarenlieferung() string {
 
 	body = fmt.Sprintf("%s<h2>Aktuelle Lagerwerte</h2><p><b>Lagerwert Verfügbare Artikel:</b> %.2f €</p><p><b>Lagerwert alle lagernde Artikel:</b> %.2f €</p>", body, wertVerfügbar, wertBestand)
 	body = fmt.Sprintf("%s<p>Wert in aktuellen Aufträgen: %.2f €", body, wertBestand-wertVerfügbar)
-	body = fmt.Sprintf("%s<p>Werte in offenen Aufträgen laut Sage: %.2f €", body, gesamtWert)
+	body = fmt.Sprintf("%s<p>Offene Posten laut Sage: %.2f €* (Hier kann nicht nach bereits lagernder Ware gesucht werden!)", body, gesamtWert)
 
 	if len(SN) > 0 {
 		body = fmt.Sprintf("%s<h2>Artikel mit alten Seriennummern</h2><p>Nachfolgende Artikel sollten mit erhöhter Prioriät verkauf werden, da die Seriennummern bereits sehr alt sind. Gegebenenfalls sind die Artikel bereits außerhalb der Herstellergarantie!</p>", body)
@@ -1490,7 +1494,7 @@ func (a *App) SendWarenlieferung() string {
 	}
 
 	if len(verbrecher) > 0 {
-		body = fmt.Sprintf("%s<h2>Aktuell offene Aufträge</h2><table><thead><tr><th>Auftrag</th><th>Summe Brutto</th><th>Vertreter</th><th>Kundenname</th><th>Datum</th></tr></thead><tbody>", body)
+		body = fmt.Sprintf("%s<h2>Aktuell offene Aufträge & Lieferscheine (Es können Leichen dabei sein, das lässt sich leider nicht korrekt filtern)</h2><table><thead><tr><th>Auftrag</th><th>Summe Brutto</th><th>Vertreter</th><th>Kundenname</th><th>Datum</th></tr></thead><tbody>", body)
 
 		for _, i := range verbrecher {
 			body = fmt.Sprintf("%s<tr>", body)
@@ -1498,7 +1502,8 @@ func (a *App) SendWarenlieferung() string {
 			body = fmt.Sprintf("%s<td>%.2f €</td>", body, i.Wert)
 			body = fmt.Sprintf("%s<td>%s</td>", body, i.Verbrecher)
 			body = fmt.Sprintf("%s<td>%s</td>", body, i.Kunde)
-			body = fmt.Sprintf("%s<td>%s</td>", body, i.Datum.Format(time.DateOnly))
+			date := strings.Split(i.Datum.Format(time.DateOnly), "-")
+			body = fmt.Sprintf("%s<td>%s.%s.%s</td>", body, date[2], date[1], date[0])
 			body = fmt.Sprintf("%s</tr>", body)
 
 		}
